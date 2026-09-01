@@ -2,6 +2,8 @@
 
 !syntax description /Kernels/KKSPhaseChemicalPotential
 
+## Description
+
 Enforces the point wise
 equality of the phase chemical potentials
 

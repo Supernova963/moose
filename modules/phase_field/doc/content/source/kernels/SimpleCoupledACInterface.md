@@ -2,6 +2,8 @@
 
 !syntax description /Kernels/SimpleCoupledACInterface
 
+## Description
+
 !include simple_kernels_include.md
 
 This kernel implements the weak form

@@ -2,6 +2,8 @@
 
 !syntax description /Kernels/KKSMultiPhaseConcentration
 
+## Description
+
 ### Residual
 
 For a KKS model with $n$ phases, the residual of the phase concentration
