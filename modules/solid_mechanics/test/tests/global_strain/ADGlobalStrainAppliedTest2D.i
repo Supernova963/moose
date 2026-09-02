@@ -16,6 +16,13 @@
     use_closest_node = true
     input = generated_mesh
   []
+  [y_mid]
+    type = ExtraNodesetGenerator
+    input = cnode
+    new_boundary = 101
+    coord = '0 .5'
+    use_closest_node = true
+  []
 []
 
 [AuxVariables]
@@ -61,6 +68,12 @@
     boundary = 100
     variable = u_y
     value = 0
+  []
+  [mid_fix_x]
+    type = DirichletBC
+    boundary = 101
+    value = 0
+    variable = u_x
   []
 []
 
@@ -162,12 +175,12 @@
   petsc_options_value = '       lu            NONZERO'
 
   l_max_its = 30
-  nl_max_its = 1000
+  nl_max_its = 10
 
   l_tol = 1.0e-4
 
-  nl_rel_tol = 1.0e-14
-  nl_abs_tol = 1.0e-10
+  nl_rel_tol = 1.0e-20
+  nl_abs_tol = 1.0e-15
 
   start_time = 0.0
   num_steps = 1

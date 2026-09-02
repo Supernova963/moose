@@ -2,9 +2,9 @@
   [generated_mesh]
     type = GeneratedMeshGenerator
     dim = 3
-    nx = 4
-    ny = 4
-    nz = 4
+    nx = 6
+    ny = 6
+    nz = 6
     xmin = -0.5
     xmax = 0.5
     ymin = -0.5
@@ -12,12 +12,26 @@
     zmin = -0.5
     zmax = 0.5
   []
-  [cnode]
+  [Anode]
     type = ExtraNodesetGenerator
     coord = '0 0 0'
     new_boundary = 100
     use_closest_node = true
     input = generated_mesh
+  []
+  [Bnode]
+    type = ExtraNodesetGenerator
+    coord = '.333 -.167 -.333'
+    new_boundary = 101
+    use_closest_node = true
+    input = Anode
+  []
+  [Cnode]
+    type = ExtraNodesetGenerator
+    coord = '.167 .333 .25'
+    new_boundary = 102
+    use_closest_node = true
+    input = Bnode
   []
 []
 
@@ -47,6 +61,8 @@
     order = THIRD
     family = SCALAR
   []
+  [dummy] # Used for command line options for the test harness. Has no affect on the solve.
+  []
 []
 
 [BCs]
@@ -55,23 +71,41 @@
       auto_direction = 'x y z'
     []
   []
-  [centerfix_x]
+  [A1]
     type = DirichletBC
     boundary = 100
     variable = u_x
     value = 0
   []
-  [centerfix_y]
+  [A2]
     type = DirichletBC
     boundary = 100
     variable = u_y
     value = 0
   []
-  [centerfix_z]
+  [A3]
     type = DirichletBC
     boundary = 100
     variable = u_z
     value = 0
+  []
+  [B1]
+    type = DirichletBC
+    boundary = 101
+    value = 0
+    variable = dummy
+  []
+  [B2]
+    type = DirichletBC
+    boundary = 101
+    value = 0
+    variable = dummy
+  []
+  [C1]
+    type = DirichletBC
+    boundary = 102
+    value = 0
+    variable = dummy
   []
 []
 
@@ -126,16 +160,20 @@
     component_type = DIAGONAL
     global_strain_uo = GS_peri_dir
     scalar_global_strain = GS_diag
-    applied_stress_tensor = '.05 .065 .06'
+    applied_stress_tensor = '.05 .065 .06 .05 .05 .05'
     variable = u_x
   []
   [GS_off_diag_kernel]
     type = ADGlobalStrain
     component_type = OFF_DIAGONAL
     global_strain_uo = GS_peri_dir
-    applied_stress_tensor = '.05 .065 .06'
+    applied_stress_tensor = '.05 .065 .06 .05 .05 .05'
     scalar_global_strain = GS_off_diag
     variable = u_x
+  []
+  [dummy]
+    type = TimeDerivative
+    variable = dummy
   []
 []
 
@@ -174,7 +212,7 @@
 [Executioner]
   type = Transient
   scheme = bdf2
-  solve_type = 'PJFNK'
+  solve_type = 'NEWTON'
 
   line_search = basic
   abort_on_solve_fail = true
@@ -182,12 +220,12 @@
   petsc_options_value = '       lu            NONZERO'
 
   l_max_its = 30
-  nl_max_its = 1000
+  nl_max_its = 10
 
   l_tol = 1.0e-4
 
-  nl_rel_tol = 1.0e-14
-  nl_abs_tol = 1.0e-10
+  nl_rel_tol = 1.0e-20
+  nl_abs_tol = 1.0e-15
 
   start_time = 0.0
   num_steps = 1

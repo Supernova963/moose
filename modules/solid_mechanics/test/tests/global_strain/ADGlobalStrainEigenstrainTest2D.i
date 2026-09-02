@@ -2,8 +2,8 @@
   [generated_mesh]
     type = GeneratedMeshGenerator
     dim = 2
-    nx = 4
-    ny = 4
+    nx = 8
+    ny = 8
     xmin = -0.5
     xmax = 0.5
     ymin = -0.5
@@ -15,6 +15,13 @@
     new_boundary = 100
     use_closest_node = true
     input = generated_mesh
+  []
+  [cnode2]
+    type = ExtraNodesetGenerator
+    input = cnode
+    new_boundary = 101
+    use_closest_node = true
+    coord = '0 .05'
   []
 []
 
@@ -63,6 +70,12 @@
     boundary = 100
     variable = u_y
     value = 0
+  []
+  [top_fix]
+    type = DirichletBC
+    boundary = top
+    value = 0
+    variable = u_x
   []
 []
 
@@ -168,10 +181,10 @@
   [c_ic]
     type = BoundingBoxIC
     variable = c
-    x1 = -.25
-    x2 = .25
-    y1 = -.25
-    y2 = .25
+    x1 = -.125
+    x2 = .125
+    y1 = -.125
+    y2 = .125
     inside = 1
   []
 []
@@ -194,12 +207,12 @@
   petsc_options_value = '       lu            NONZERO'
 
   l_max_its = 30
-  nl_max_its = 1000
+  nl_max_its = 10
 
   l_tol = 1.0e-4
 
-  nl_rel_tol = 1.0e-14
-  nl_abs_tol = 1.0e-10
+  nl_rel_tol = 1.0e-20
+  nl_abs_tol = 1.0e-17
 
   start_time = 0.0
   num_steps = 1
